@@ -4,22 +4,9 @@ import type { Stop, WishlistItem } from '../lib/types'
 import { blankWishlistItem, deleteWishlistItem, upsertWishlistItem } from '../lib/wishlistActions'
 import { WishlistRow } from '../components/WishlistRow'
 import { WishlistEditSheet } from '../components/WishlistEditSheet'
+import { FilterChip } from '../components/FilterChip'
 
 type GroupBy = 'none' | 'who' | 'store'
-
-function Pill({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
-        active ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
-      }`}
-    >
-      {children}
-    </button>
-  )
-}
 
 export function Wishlist() {
   const { rows: items, setRows: setItems, loading } = useRealtimeTable<WishlistItem>('wishlist', {
@@ -90,46 +77,46 @@ export function Wishlist() {
   }
 
   if (loading) {
-    return <div className="py-20 text-center text-slate-400">載入中…</div>
+    return <div className="py-20 text-center text-sm text-muted">載入中…</div>
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-lg font-bold text-slate-800">想買清單</h1>
+        <h1 className="font-serif text-lg text-ink">想買清單</h1>
         <button
           type="button"
           onClick={() => {
             setEditingItem(blankWishlistItem())
             setIsNew(true)
           }}
-          className="rounded-xl bg-slate-900 px-3 py-1.5 text-sm font-medium text-white"
+          className="rounded-md border border-primary px-3 py-1.5 text-sm text-primary"
         >
           ＋ 新增
         </button>
       </div>
 
-      <div className="rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+      <div className="rounded-lg border border-hairline bg-card p-4">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-slate-500">預算小計</span>
-          <span className="font-bold text-slate-800">¥{total.toLocaleString()}</span>
+          <span className="text-muted">預算小計</span>
+          <span className="tabular-nums font-medium text-ink">¥{total.toLocaleString()}</span>
         </div>
-        <div className="mt-0.5 flex items-center justify-between text-xs text-slate-400">
+        <div className="mt-1 flex items-center justify-between text-xs text-muted">
           <span>已購買</span>
-          <span>¥{boughtTotal.toLocaleString()}</span>
+          <span className="tabular-nums">¥{boughtTotal.toLocaleString()}</span>
         </div>
       </div>
 
       <div className="flex gap-1.5">
-        <Pill active={groupBy === 'none'} onClick={() => setGroupBy('none')}>
+        <FilterChip active={groupBy === 'none'} onClick={() => setGroupBy('none')}>
           全部
-        </Pill>
-        <Pill active={groupBy === 'who'} onClick={() => setGroupBy('who')}>
+        </FilterChip>
+        <FilterChip active={groupBy === 'who'} onClick={() => setGroupBy('who')}>
           依人分組
-        </Pill>
-        <Pill active={groupBy === 'store'} onClick={() => setGroupBy('store')}>
+        </FilterChip>
+        <FilterChip active={groupBy === 'store'} onClick={() => setGroupBy('store')}>
           依店家分組
-        </Pill>
+        </FilterChip>
       </div>
 
       <div className="space-y-5">
@@ -139,8 +126,8 @@ export function Wishlist() {
             <div key={group.key || 'all'} className="space-y-2">
               {groupBy !== 'none' && (
                 <div className="flex items-center justify-between px-1 text-sm">
-                  <span className="font-semibold text-slate-600">{group.label}</span>
-                  <span className="text-slate-400">¥{subtotal.toLocaleString()}</span>
+                  <span className="text-ink">{group.label}</span>
+                  <span className="tabular-nums text-muted">¥{subtotal.toLocaleString()}</span>
                 </div>
               )}
               {group.items.map((item) => (
@@ -158,7 +145,7 @@ export function Wishlist() {
             </div>
           )
         })}
-        {items.length === 0 && <div className="py-10 text-center text-sm text-slate-300">還沒有想買的東西</div>}
+        {items.length === 0 && <div className="py-10 text-center text-sm text-muted">還沒有想買的東西</div>}
       </div>
 
       {editingItem && (

@@ -5,22 +5,9 @@ import { PEOPLE, STOP_TYPE_LABEL } from '../lib/types'
 import { normalizeName } from '../lib/normalize'
 import { copyStopToDay } from '../lib/stopActions'
 import { CandidateCard } from '../components/CandidateCard'
+import { FilterChip } from '../components/FilterChip'
 
 const TYPES: StopType[] = ['eat', 'see', 'buy']
-
-function Pill({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`rounded-full px-3 py-1.5 text-sm font-medium transition ${
-        active ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
-      }`}
-    >
-      {children}
-    </button>
-  )
-}
 
 export function Candidates() {
   const { rows: days, loading: loadingDays } = useRealtimeTable<Day>('days', { orderBy: { column: 'date' } })
@@ -75,47 +62,47 @@ export function Candidates() {
   }
 
   if (loadingDays || loadingStops) {
-    return <div className="py-20 text-center text-slate-400">載入中…</div>
+    return <div className="py-20 text-center text-sm text-muted">載入中…</div>
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-lg font-bold text-slate-800">候選清單</h1>
+    <div className="space-y-5">
+      <h1 className="font-serif text-lg text-ink">候選清單</h1>
 
       <div className="space-y-2">
         <div className="flex flex-wrap gap-1.5">
-          <Pill active={type === 'all'} onClick={() => setType('all')}>
+          <FilterChip active={type === 'all'} onClick={() => setType('all')}>
             全部類型
-          </Pill>
+          </FilterChip>
           {TYPES.map((t) => (
-            <Pill key={t} active={type === t} onClick={() => setType(t)}>
+            <FilterChip key={t} active={type === t} onClick={() => setType(t)}>
               {STOP_TYPE_LABEL[t]}
-            </Pill>
+            </FilterChip>
           ))}
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <Pill active={region === 'all'} onClick={() => setRegion('all')}>
+          <FilterChip active={region === 'all'} onClick={() => setRegion('all')}>
             全部地區
-          </Pill>
+          </FilterChip>
           {regions.map((r) => (
-            <Pill key={r} active={region === r} onClick={() => setRegion(r)}>
+            <FilterChip key={r} active={region === r} onClick={() => setRegion(r)}>
               {r}
-            </Pill>
+            </FilterChip>
           ))}
         </div>
         <div className="flex flex-wrap gap-1.5">
-          <Pill active={who === 'all'} onClick={() => setWho('all')}>
+          <FilterChip active={who === 'all'} onClick={() => setWho('all')}>
             大家都看
-          </Pill>
+          </FilterChip>
           {PEOPLE.map((p) => (
-            <Pill key={p} active={who === p} onClick={() => setWho(p)}>
+            <FilterChip key={p} active={who === p} onClick={() => setWho(p)}>
               {p}想去
-            </Pill>
+            </FilterChip>
           ))}
         </div>
       </div>
 
-      <div className="text-xs text-slate-400">{filtered.length} 個候選景點</div>
+      <div className="text-xs text-muted">{filtered.length} 個候選景點</div>
 
       <div className="space-y-2">
         {filtered.map((c) => (
@@ -127,7 +114,7 @@ export function Candidates() {
             onAdd={(dayId) => handleAdd(c, dayId)}
           />
         ))}
-        {filtered.length === 0 && <div className="py-10 text-center text-sm text-slate-300">沒有符合條件的景點</div>}
+        {filtered.length === 0 && <div className="py-10 text-center text-sm text-muted">沒有符合條件的景點</div>}
       </div>
     </div>
   )

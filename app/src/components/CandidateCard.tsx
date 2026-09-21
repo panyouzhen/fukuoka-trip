@@ -1,6 +1,8 @@
-import { STOP_TYPE_LABEL } from '../lib/types'
+import { MapPin, CircleCheck } from 'lucide-react'
 import type { Day, Stop } from '../lib/types'
 import { StopThumb } from './StopThumb'
+import { TypeTag } from './TypeTag'
+import { PersonBadgeRow } from './PersonBadge'
 
 export function CandidateCard({
   stop,
@@ -14,44 +16,38 @@ export function CandidateCard({
   onAdd: (targetDayId: string) => void
 }) {
   return (
-    <div className="flex gap-3 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm">
+    <div className="flex gap-3 rounded-lg border border-hairline bg-card p-3">
       <StopThumb stop={stop} size="md" />
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="rounded-md bg-sky-100 px-1.5 py-0.5 text-xs font-medium text-sky-700">
-            {STOP_TYPE_LABEL[stop.type]}
-          </span>
-          {stop.region && <span className="text-xs text-slate-400">{stop.region}</span>}
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <TypeTag type={stop.type} />
+          {stop.region && <span className="text-xs text-muted">{stop.region}</span>}
         </div>
 
-        <div className="mt-1 truncate font-semibold text-slate-800">{stop.name}</div>
-        {stop.note && <div className="mt-0.5 line-clamp-2 text-sm text-slate-500">{stop.note}</div>}
+        <div className="mt-1 flex items-baseline justify-between gap-2">
+          <span className="truncate font-medium text-ink">{stop.name}</span>
+          <PersonBadgeRow people={stop.who_wants} />
+        </div>
 
-        {stop.who_wants.length > 0 && (
-          <div className="mt-1 flex gap-1">
-            {stop.who_wants.map((p) => (
-              <span key={p} className="rounded-md bg-amber-100 px-1.5 py-0.5 text-xs font-medium text-amber-700">
-                {p}
-              </span>
-            ))}
-          </div>
-        )}
+        {stop.note && <div className="mt-0.5 line-clamp-2 text-sm text-muted">{stop.note}</div>}
 
         {scheduledIn.length > 0 && (
-          <div className="mt-1.5 text-xs font-medium text-emerald-600">
-            ✅ 已排入 {scheduledIn.map((d) => d.date.slice(5)).join('、')}
+          <div className="mt-1.5 inline-flex items-center gap-1.5 text-xs text-primary">
+            <CircleCheck size={13} strokeWidth={1.5} />
+            已排入 {scheduledIn.map((d) => d.date.slice(5)).join('、')}
           </div>
         )}
 
-        <div className="mt-2 flex flex-wrap items-center gap-1.5">
+        <div className="mt-2 flex flex-wrap items-center gap-3">
           {stop.map_url && (
             <a
               href={stop.map_url.split('\n')[0]}
               target="_blank"
               rel="noreferrer"
-              className="rounded-lg bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700"
+              className="inline-flex items-center gap-1 text-xs text-primary"
             >
-              🗺️ 地圖
+              <MapPin size={13} strokeWidth={1.75} />
+              地圖
             </a>
           )}
           <select
@@ -60,9 +56,9 @@ export function CandidateCard({
               if (e.target.value) onAdd(e.target.value)
               e.target.value = ''
             }}
-            className="rounded-lg bg-slate-900 px-2 py-1 text-xs font-medium text-white"
+            className="rounded-md border border-hairline bg-card px-2 py-1 text-xs text-ink"
           >
-            <option value="">＋ 加入某一天</option>
+            <option value="">加入某一天</option>
             {days.map((d) => (
               <option key={d.id} value={d.id}>
                 {d.date.slice(5)} {d.region}

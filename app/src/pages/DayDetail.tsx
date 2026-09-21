@@ -153,14 +153,14 @@ export function DayDetail() {
   }
 
   if (loadingDays || loadingStops || !dayId) {
-    return <div className="py-20 text-center text-slate-400">載入中…</div>
+    return <div className="py-20 text-center text-sm text-muted">載入中…</div>
   }
 
   return (
-    <div className="-mt-4">
+    <div className="-mt-5">
       <DayTabs days={days} activeId={dayId} onSelect={(id) => navigate(`/day/${id}`)} />
 
-      <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} className="space-y-2 pt-3">
+      <div onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} className="space-y-2.5 pt-4">
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
           <SortableContext items={dayStops.map((s) => s.id)} strategy={verticalListSortingStrategy}>
             {dayStops.map((stop, i) => (
@@ -181,7 +181,7 @@ export function DayDetail() {
         </DndContext>
 
         {dayStops.length === 0 && (
-          <div className="py-10 text-center text-sm text-slate-300">這天還沒有安排行程</div>
+          <div className="py-10 text-center text-sm text-muted">這天還沒有安排行程</div>
         )}
 
         <div className="flex gap-2 pt-2">
@@ -190,14 +190,14 @@ export function DayDetail() {
             onChange={(e) => setQuickText(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleQuickAdd()}
             placeholder="快速新增行程，輸入名稱後 Enter"
-            className="flex-1 rounded-xl border border-slate-300 px-3 py-2.5 text-sm"
+            className="flex-1 rounded-md border border-hairline bg-card px-3 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:border-primary"
           />
           <button
             type="button"
             onClick={handleQuickAdd}
-            className="rounded-xl bg-slate-900 px-4 text-sm font-medium text-white"
+            className="rounded-md bg-primary px-4 text-sm font-medium text-card"
           >
-            ＋ 新增
+            新增
           </button>
         </div>
       </div>

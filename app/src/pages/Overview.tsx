@@ -104,22 +104,22 @@ export function Overview() {
   const returnFlights = flights.filter((f) => f.direction === 'return')
 
   if (loadingDays || loadingStops) {
-    return <div className="py-20 text-center text-slate-400">載入中…</div>
+    return <div className="py-20 text-center text-sm text-muted">載入中…</div>
   }
 
   return (
-    <div className="space-y-5">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+    <div className="space-y-8">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <MonthCalendar days={days} />
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="mb-2 text-sm font-bold text-slate-700">✈️ 航班資訊</div>
+        <div className="rounded-lg border border-hairline bg-card p-5">
+          <div className="mb-3 font-serif text-base text-ink">航班資訊</div>
           {flightsError ? (
-            <p className="text-xs text-slate-400">
-              航班資料表還沒建立，跑一下 <code className="rounded bg-slate-100 px-1">supabase/patch-2-flights.sql</code> 就會出現。
+            <p className="text-xs leading-relaxed text-muted">
+              航班資料表還沒建立，跑一下 <code className="rounded bg-thumb px-1">supabase/patch-2-flights.sql</code> 就會出現。
             </p>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <div className="space-y-1.5">
                 {departFlights.map((f) => (
                   <FlightCard key={f.id} flight={f} onEdit={() => setEditingFlight(f)} />
@@ -127,7 +127,7 @@ export function Overview() {
                 <button
                   type="button"
                   onClick={() => setEditingFlight(blankFlight('depart'))}
-                  className="w-full rounded-xl border border-dashed border-slate-300 py-2 text-xs text-slate-400"
+                  className="w-full rounded-md border border-dashed border-hairline py-2 text-xs text-muted"
                 >
                   ＋ 新增去程班機
                 </button>
@@ -139,7 +139,7 @@ export function Overview() {
                 <button
                   type="button"
                   onClick={() => setEditingFlight(blankFlight('return'))}
-                  className="w-full rounded-xl border border-dashed border-slate-300 py-2 text-xs text-slate-400"
+                  className="w-full rounded-md border border-dashed border-hairline py-2 text-xs text-muted"
                 >
                   ＋ 新增回程班機
                 </button>
@@ -149,25 +149,27 @@ export function Overview() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-lg font-bold text-slate-800">每日行程</h1>
-        {swapping && <span className="text-xs text-slate-400">同步中…</span>}
-      </div>
-
-      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {days.map((day) => (
-            <DayCard
-              key={day.id}
-              day={day}
-              stops={stopsByDay.get(day.id) ?? []}
-              onOpen={() => navigate(`/day/${day.id}`)}
-            />
-          ))}
+      <div>
+        <div className="flex items-center justify-between">
+          <h1 className="font-serif text-lg text-ink">每日行程</h1>
+          {swapping && <span className="text-xs text-muted">同步中…</span>}
         </div>
-      </DndContext>
 
-      <p className="pt-2 text-center text-xs text-slate-400">長按卡片右上角 ☰ 可拖曳交換兩天內容</p>
+        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {days.map((day) => (
+              <DayCard
+                key={day.id}
+                day={day}
+                stops={stopsByDay.get(day.id) ?? []}
+                onOpen={() => navigate(`/day/${day.id}`)}
+              />
+            ))}
+          </div>
+        </DndContext>
+
+        <p className="mt-4 text-center text-xs text-muted">拖曳卡片右上角把手，可交換兩天內容</p>
+      </div>
 
       {editingFlight && (
         <FlightEditSheet

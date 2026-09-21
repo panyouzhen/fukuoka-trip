@@ -1,10 +1,16 @@
-import { STOP_VISUAL } from '../lib/stopVisual'
+import { STOP_TYPE_ICON } from '../lib/stopVisual'
 import type { Stop } from '../lib/types'
 
 const SIZE_CLASS = {
-  sm: 'h-10 w-10 text-base rounded-lg',
-  md: 'h-14 w-14 text-2xl rounded-xl',
-  lg: 'aspect-video w-full text-4xl rounded-xl',
+  sm: 'h-10 w-10 rounded-md',
+  md: 'h-14 w-14 rounded-lg',
+  lg: 'aspect-video w-full rounded-lg',
+} as const
+
+const ICON_SIZE = {
+  sm: 16,
+  md: 20,
+  lg: 32,
 } as const
 
 export function StopThumb({
@@ -20,10 +26,10 @@ export function StopThumb({
     return <img src={stop.image_url} alt={stop.name} className={`${cls} object-cover`} />
   }
 
-  const v = STOP_VISUAL[stop.type]
+  const Icon = STOP_TYPE_ICON[stop.type]
   return (
-    <div className={`${cls} bg-gradient-to-br ${v.gradient} text-white`}>
-      <span>{v.emoji}</span>
+    <div className={`${cls} bg-thumb`}>
+      <Icon size={ICON_SIZE[size]} strokeWidth={1.5} className="text-muted/70" />
     </div>
   )
 }

@@ -1,9 +1,10 @@
+import { UtensilsCrossed, Landmark, ShoppingBag, TrainFront, MapPin, type LucideIcon } from 'lucide-react'
 import type { StopType } from './types'
 
-export const STOP_VISUAL: Record<StopType, { gradient: string; emoji: string }> = {
-  eat: { gradient: 'from-orange-300 to-rose-400', emoji: '🍜' },
-  see: { gradient: 'from-sky-300 to-indigo-400', emoji: '🏯' },
-  buy: { gradient: 'from-fuchsia-300 to-purple-400', emoji: '🛍️' },
-  transport: { gradient: 'from-slate-300 to-slate-500', emoji: '🚃' },
-  other: { gradient: 'from-emerald-300 to-teal-400', emoji: '📍' },
+export const STOP_TYPE_ICON: Record<StopType, LucideIcon> = {
+  eat: UtensilsCrossed,
+  see: Landmark,
+  buy: ShoppingBag,
+  transport: TrainFront,
+  other: MapPin,
 }

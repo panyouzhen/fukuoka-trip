@@ -69,12 +69,12 @@ export function Todos() {
   }
 
   if (loading) {
-    return <div className="py-20 text-center text-slate-400">載入中…</div>
+    return <div className="py-20 text-center text-sm text-muted">載入中…</div>
   }
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-lg font-bold text-slate-800">待辦提醒</h1>
+    <div className="space-y-5">
+      <h1 className="font-serif text-lg text-ink">待辦提醒</h1>
 
       <div className="flex gap-2">
         <input
@@ -82,20 +82,20 @@ export function Todos() {
           onChange={(e) => setText(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleAdd()}
           placeholder="新增待辦事項"
-          className="flex-1 rounded-xl border border-slate-300 px-3 py-2.5 text-sm"
+          className="flex-1 rounded-md border border-hairline bg-card px-3 py-2.5 text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:border-primary"
         />
         <input
           type="date"
           value={dueDate}
           onChange={(e) => setDueDate(e.target.value)}
-          className="w-36 rounded-xl border border-slate-300 px-2 py-2.5 text-sm"
+          className="w-36 rounded-md border border-hairline bg-card px-2 py-2.5 text-sm tabular-nums text-ink focus:outline-none focus:border-primary"
         />
         <button
           type="button"
           onClick={handleAdd}
-          className="rounded-xl bg-slate-900 px-4 text-sm font-medium text-white"
+          className="rounded-md bg-primary px-4 text-sm font-medium text-card"
         >
-          ＋
+          新增
         </button>
       </div>
 
@@ -109,16 +109,12 @@ export function Todos() {
             onDelete={() => handleDelete(t)}
           />
         ))}
-        {pending.length === 0 && <div className="py-10 text-center text-sm text-slate-300">目前沒有待辦事項</div>}
+        {pending.length === 0 && <div className="py-10 text-center text-sm text-muted">目前沒有待辦事項</div>}
       </div>
 
       {done.length > 0 && (
         <div className="space-y-2">
-          <button
-            type="button"
-            onClick={() => setShowDone((v) => !v)}
-            className="text-xs font-medium text-slate-400"
-          >
+          <button type="button" onClick={() => setShowDone((v) => !v)} className="text-xs text-muted">
             {showDone ? '隱藏' : '顯示'}已完成（{done.length}）
           </button>
           {showDone &&

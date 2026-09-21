@@ -24,11 +24,11 @@ export function MonthCalendar({
   const dayByDate = new Map(days.map((d) => [d.date, d]))
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-      <div className="mb-2 text-sm font-bold text-slate-700">
+    <div className="rounded-lg border border-hairline bg-card p-5">
+      <div className="mb-3 font-serif text-base text-ink tabular-nums">
         {year} 年 {month} 月
       </div>
-      <div className="grid grid-cols-7 gap-1 text-center text-xs text-slate-400">
+      <div className="grid grid-cols-7 gap-1 text-center text-xs text-muted">
         {WEEKDAYS.map((w) => (
           <div key={w} className="py-1">
             {w}
@@ -46,8 +46,8 @@ export function MonthCalendar({
               type="button"
               disabled={!tripDay}
               onClick={() => tripDay && navigate(`/day/${tripDay.id}`)}
-              className={`aspect-square rounded-lg text-sm font-medium transition ${
-                tripDay ? 'bg-sky-500 text-white hover:bg-sky-600' : 'text-slate-300'
+              className={`aspect-square rounded-md text-sm tabular-nums transition ${
+                tripDay ? 'bg-primary text-card' : 'text-muted/50'
               }`}
             >
               {d}

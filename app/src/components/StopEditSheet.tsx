@@ -1,7 +1,13 @@
 import { useState } from 'react'
+import { X } from 'lucide-react'
 import { PEOPLE, STOP_TYPE_LABEL, type Person, type Stop, type StopType } from '../lib/types'
+import { STOP_TYPE_ICON } from '../lib/stopVisual'
 
 const TYPES = Object.keys(STOP_TYPE_LABEL) as StopType[]
+
+const FIELD =
+  'w-full rounded-md border border-hairline bg-card px-2.5 py-2 text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:border-primary'
+const LABEL = 'mb-1 block text-xs text-muted'
 
 export function StopEditSheet({
   stop,
@@ -47,107 +53,114 @@ export function StopEditSheet({
   }
 
   return (
-    <div className="fixed inset-0 z-30 flex items-end justify-center bg-black/40 sm:items-center" onClick={onClose}>
+    <div className="fixed inset-0 z-30 flex items-end justify-center bg-ink/30 sm:items-center" onClick={onClose}>
       <div
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[90dvh] w-full max-w-lg overflow-y-auto rounded-t-2xl bg-white p-5 sm:rounded-2xl"
+        className="max-h-[90dvh] w-full max-w-lg overflow-y-auto rounded-t-lg border border-hairline bg-card p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] sm:rounded-lg"
       >
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-slate-800">編輯行程</h2>
-          <button type="button" onClick={onClose} className="text-slate-400">
-            ✕
+        <div className="mb-5 flex items-center justify-between">
+          <h2 className="font-serif text-lg font-semibold text-ink">編輯行程</h2>
+          <button type="button" onClick={onClose} className="text-muted">
+            <X size={18} strokeWidth={1.5} />
           </button>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-4">
           <div className="flex gap-2">
             <div className="w-28">
-              <label className="mb-1 block text-xs text-slate-500">時間（可空白）</label>
+              <label className={LABEL}>時間（可空白）</label>
               <input
                 value={form.time}
                 onChange={(e) => setForm((f) => ({ ...f, time: e.target.value }))}
                 placeholder="10:00"
-                className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+                className={`${FIELD} tabular-nums`}
               />
             </div>
             <div className="flex-1">
-              <label className="mb-1 block text-xs text-slate-500">名稱</label>
+              <label className={LABEL}>名稱</label>
               <input
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+                className={FIELD}
               />
             </div>
           </div>
 
           <div>
-            <label className="mb-1 block text-xs text-slate-500">類型</label>
-            <div className="flex gap-1.5">
-              {TYPES.map((t) => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setForm((f) => ({ ...f, type: t }))}
-                  className={`flex-1 rounded-lg py-1.5 text-sm font-medium ${
-                    form.type === t ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600'
-                  }`}
-                >
-                  {STOP_TYPE_LABEL[t]}
-                </button>
-              ))}
+            <label className={LABEL}>類型</label>
+            <div className="flex gap-1">
+              {TYPES.map((t) => {
+                const Icon = STOP_TYPE_ICON[t]
+                const active = form.type === t
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => setForm((f) => ({ ...f, type: t }))}
+                    className={`flex flex-1 flex-col items-center gap-1 rounded-md border py-2 text-xs ${
+                      active ? 'border-primary text-primary' : 'border-hairline text-muted'
+                    }`}
+                  >
+                    <Icon size={16} strokeWidth={1.5} />
+                    {STOP_TYPE_LABEL[t]}
+                  </button>
+                )
+              })}
             </div>
           </div>
 
           <div>
-            <label className="mb-1 block text-xs text-slate-500">備註</label>
+            <label className={LABEL}>備註</label>
             <textarea
               value={form.note}
               onChange={(e) => setForm((f) => ({ ...f, note: e.target.value }))}
               rows={2}
-              className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+              className={FIELD}
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-xs text-slate-500">營業時間</label>
+            <label className={LABEL}>營業時間</label>
             <input
               value={form.hours}
               onChange={(e) => setForm((f) => ({ ...f, hours: e.target.value }))}
               placeholder="10:00~20:00"
-              className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+              className={`${FIELD} tabular-nums`}
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-xs text-slate-500">Google Maps 連結</label>
+            <label className={LABEL}>Google Maps 連結</label>
             <input
               value={form.map_url}
               onChange={(e) => setForm((f) => ({ ...f, map_url: e.target.value }))}
               placeholder="https://maps.app.goo.gl/..."
-              className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+              className={FIELD}
             />
           </div>
 
           <div>
-            <label className="mb-1 block text-xs text-slate-500">圖片網址（上傳／自動找圖之後補）</label>
+            <label className={LABEL}>圖片網址（上傳／自動找圖之後補）</label>
             <input
               value={form.image_url}
               onChange={(e) => setForm((f) => ({ ...f, image_url: e.target.value }))}
               placeholder="https://..."
-              className="w-full rounded-lg border border-slate-300 px-2 py-2 text-sm"
+              className={FIELD}
             />
           </div>
 
           <div className="flex items-center justify-between">
-            <label className="text-sm text-slate-600">誰想去</label>
+            <label className="text-sm text-muted">誰想去</label>
             <div className="flex gap-1.5">
               {PEOPLE.map((p) => (
                 <button
                   key={p}
                   type="button"
                   onClick={() => togglePerson(p)}
-                  className={`rounded-lg px-3 py-1 text-sm font-medium ${
-                    form.who_wants.includes(p) ? 'bg-sky-500 text-white' : 'bg-slate-100 text-slate-600'
+                  className={`flex h-8 w-8 items-center justify-center rounded-full border text-sm ${
+                    form.who_wants.includes(p)
+                      ? 'border-primary bg-primary text-card'
+                      : 'border-hairline text-muted'
                   }`}
                 >
                   {p}
@@ -156,12 +169,12 @@ export function StopEditSheet({
             </div>
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-slate-600">
+          <label className="flex items-center gap-2 text-sm text-ink">
             <input
               type="checkbox"
               checked={form.needs_booking}
               onChange={(e) => setForm((f) => ({ ...f, needs_booking: e.target.checked }))}
-              className="h-4 w-4"
+              className="h-4 w-4 accent-warn"
             />
             需訂位
           </label>
@@ -170,7 +183,7 @@ export function StopEditSheet({
         <button
           type="button"
           onClick={submit}
-          className="mt-5 w-full rounded-xl bg-slate-900 py-3 font-medium text-white active:scale-[0.98]"
+          className="mt-6 w-full rounded-md bg-primary py-3 text-sm font-medium text-card"
         >
           儲存
         </button>
