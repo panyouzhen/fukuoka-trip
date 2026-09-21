@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { DndContext, PointerSensor, useSensor, useSensors, type DragEndEvent } from '@dnd-kit/core'
 import { useRealtimeTable } from '../hooks/useRealtimeTable'
 import type { Day, Flight, Stop } from '../lib/types'
-import { swapDays } from '../lib/dayActions'
+import { swapDays, updateDay, deriveRegion } from '../lib/dayActions'
 import { blankFlight, upsertFlight, deleteFlight } from '../lib/flightActions'
 import { DayCard } from '../components/DayCard'
 import { MonthCalendar } from '../components/MonthCalendar'
@@ -100,6 +100,17 @@ export function Overview() {
     }
   }
 
+  async function handleTitleChange(day: Day, title: string) {
+    const region = deriveRegion(title)
+    setDays((prev) => prev.map((d) => (d.id === day.id ? { ...d, title, region } : d)))
+    try {
+      await updateDay(day.id, { title, region })
+    } catch (err) {
+      console.error(err)
+      alert('標題儲存失敗，請檢查網路後重試')
+    }
+  }
+
   const departFlights = flights.filter((f) => f.direction === 'depart')
   const returnFlights = flights.filter((f) => f.direction === 'return')
 
@@ -163,6 +174,7 @@ export function Overview() {
                 day={day}
                 stops={stopsByDay.get(day.id) ?? []}
                 onOpen={() => navigate(`/day/${day.id}`)}
+                onTitleChange={(title) => handleTitleChange(day, title)}
               />
             ))}
           </div>
